@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -181,9 +181,6 @@
             <div class="nav-brand">
                 <a href="#home" id="nav-name">Portfolio</a>
             </div>
-            <div class="nav-indicator">
-                <span class="nav-progress"></span>
-            </div>
             <ul class="nav-menu">
                 <li><a href="#about" class="nav-link" data-section="about">About</a></li>
                 <li><a href="#experience" class="nav-link" data-section="experience">Experience</a></li>
@@ -199,178 +196,124 @@
         </div>
     </nav>
 
-    <!-- Hero Section - Terminal Style -->
+    <!-- Hero Section - Professional -->
     <section id="home" class="hero">
-        <canvas id="matrixCanvas"></canvas>
-        <div class="terminal-window">
-            <div class="terminal-header">
-                <div class="terminal-buttons">
-                    <span class="btn-close"></span>
-                    <span class="btn-minimize"></span>
-                    <span class="btn-maximize"></span>
-                </div>
-                <div class="terminal-title">root@portfolio:~$</div>
-            </div>
-            <div class="terminal-body">
-                <div class="terminal-line">
-                    <span class="prompt">guest@system:~$</span>
-                    <span class="command">whoami</span>
-                </div>
-                <div class="terminal-output">
-                    <h1 class="hero-name" id="heroName">
-                        <span class="typing-text">Your Name</span>
-                        <span class="cursor">_</span>
-                    </h1>
-                </div>
-                <div class="terminal-line">
-                    <span class="prompt">guest@system:~$</span>
-                    <span class="command">cat profile.txt</span>
-                </div>
-                <div class="terminal-output">
-                    <p class="hero-subtitle" id="heroTitle">Cybersecurity & Intelligence Professional</p>
-                    <p class="hero-description" id="heroDescription">Protecting digital assets and analyzing threats.</p>
-                </div>
-                <div class="terminal-line">
-                    <span class="prompt">guest@system:~$</span>
-                    <span class="command">ls -la ./projects</span>
-                </div>
-                <div class="terminal-navigation">
-                    <a href="#projects" class="terminal-link">[ENTER] View Projects →</a>
-                </div>
-                <div class="terminal-line terminal-cursor-line">
-                    <span class="prompt">guest@system:~$</span>
-                    <span class="cursor-blink">█</span>
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-greeting">Welcome to my portfolio</span>
+                <h1 class="hero-name" id="heroName">Your Name</h1>
+                <p class="hero-subtitle" id="heroTitle">Cybersecurity & Intelligence Professional</p>
+                <p class="hero-description" id="heroDescription">Protecting digital assets and analyzing threats.</p>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
                 </div>
             </div>
+            <div class="hero-social" id="heroSocial"></div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <i class="fas fa-chevron-down"></i>
         </div>
     </section>
 
-    <!-- About Section - Terminal File View -->
+    <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
-            <div class="section-header-term">
-                <span class="prompt">guest@system:~$</span>
-                <span class="command">cat about.md</span>
+            <div class="section-header">
+                <span class="section-label">Introduction</span>
+                <h2 class="section-title">About Me</h2>
+                <div class="section-line"></div>
             </div>
-            <div class="terminal-content">
-                <div class="file-meta">
-                    <span># ABOUT.MD</span>
-                    <span class="file-hash">SHA256: a3f2...</span>
-                </div>
-                <div class="about-content">
+            <div class="about-content">
+                <div class="about-text-wrapper">
                     <p class="lead" id="aboutLead">Cybersecurity professional...</p>
                     <div id="aboutParagraphs" class="about-text"></div>
-                    <div class="about-stats terminal-stats" id="aboutStats"></div>
                 </div>
+                <div class="about-stats" id="aboutStats"></div>
             </div>
         </div>
     </section>
 
-    <!-- Experience Section - Log Files -->
+    <!-- Experience Section -->
     <section id="experience" class="experience">
         <div class="container">
-            <div class="section-header-term">
-                <span class="prompt">guest@system:~$</span>
-                <span class="command">tail -f experience.log</span>
+            <div class="section-header">
+                <span class="section-label">Career Journey</span>
+                <h2 class="section-title">Professional Experience</h2>
+                <div class="section-line"></div>
             </div>
-            <div class="terminal-content">
-                <div class="log-viewer">
-                    <div class="log-header">
-                        <span>[SYSTEM] Displaying chronological work history...</span>
-                    </div>
-                    <div id="experienceTimeline" class="experience-logs"></div>
-                </div>
-            </div>
+            <div class="experience-timeline" id="experienceTimeline"></div>
         </div>
     </section>
 
-    <!-- Skills Section - System Info -->
+    <!-- Skills Section -->
     <section id="skills" class="skills">
         <div class="container">
-            <div class="section-header-term">
-                <span class="prompt">guest@system:~$</span>
-                <span class="command">./scan_skills.sh --verbose</span>
+            <div class="section-header">
+                <span class="section-label">Expertise</span>
+                <h2 class="section-title">Skills & Certifications</h2>
+                <div class="section-line"></div>
             </div>
-            <div class="terminal-content">
-                <div class="scan-output">
-                    <div class="scan-header">
-                        <span>[INFO] Initializing skill scanner...</span>
-                        <span>[INFO] Scanning installed packages...</span>
-                    </div>
-                    <div class="skills-grid" id="skillsGrid"></div>
-                </div>
-                <div class="certifications">
-                    <div class="cert-header">
-                        <span>[INFO] Verified certifications:</span>
-                    </div>
-                    <div class="cert-grid" id="certGrid"></div>
-                </div>
+            <div class="skills-content">
+                <div class="skills-grid" id="skillsGrid"></div>
+            </div>
+            <div class="certifications">
+                <h3 class="cert-title">Professional Certifications</h3>
+                <div class="cert-grid" id="certGrid"></div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section - Directory Listing -->
+    <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
-            <div class="section-header-term">
-                <span class="prompt">guest@system:~$</span>
-                <span class="command">ls -lah ./projects/</span>
+            <div class="section-header">
+                <span class="section-label">Portfolio</span>
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="section-line"></div>
             </div>
-            <div class="terminal-content">
-                <div class="dir-listing">
-                    <div class="dir-header">
-                        <span>total 42</span>
-                        <span>drwxr-xr-x 12 user staff 384B</span>
-                    </div>
-                    <div class="projects-stack" id="projectsGrid"></div>
-                </div>
-            </div>
+            <div class="projects-grid" id="projectsGrid"></div>
         </div>
     </section>
 
-    <!-- Contact Section - Email Client -->
+    <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
-            <div class="section-header-term">
-                <span class="prompt">guest@system:~$</span>
-                <span class="command">mail --compose</span>
+            <div class="section-header">
+                <span class="section-label">Get in Touch</span>
+                <h2 class="section-title">Contact Me</h2>
+                <div class="section-line"></div>
             </div>
-            <div class="terminal-content">
-                <div class="email-client">
-                    <div class="email-info">
-                        <p class="contact-description" id="contactDescription">Feel free to reach out.</p>
-                        <div class="contact-methods" id="contactMethods"></div>
-                    </div>
-                    <form class="contact-form terminal-form" id="contactForm">
-                        <div class="form-line">
-                            <span class="form-label">To:</span>
-                            <input type="email" name="to" value="your@email.com" readonly>
-                        </div>
-                        <div class="form-line">
-                            <span class="form-label">From:</span>
-                            <input type="email" name="email" placeholder="your@email.com" required>
-                        </div>
-                        <div class="form-line">
-                            <span class="form-label">Name:</span>
-                            <input type="text" name="name" placeholder="Your Name" required>
-                        </div>
-                        <div class="form-line">
-                            <span class="form-label">Subject:</span>
-                            <input type="text" name="subject" placeholder="Enter subject" required>
-                        </div>
-                        <div class="form-line">
-                            <span class="form-label">Message:</span>
-                        </div>
-                        <div class="form-textarea">
-                            <textarea name="message" rows="8" placeholder="Type your message here..." required></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="terminal-button">
-                                <span>[SEND]</span>
-                            </button>
-                        </div>
-                    </form>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p class="contact-description" id="contactDescription">Feel free to reach out.</p>
+                    <div class="contact-methods" id="contactMethods"></div>
                 </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName">Name</label>
+                            <input type="text" id="contactName" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email</label>
+                            <input type="email" id="contactEmail" name="email" placeholder="your@email.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Subject</label>
+                        <input type="text" id="contactSubject" name="subject" placeholder="Enter subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" name="message" rows="6" placeholder="Your message..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
             </div>
         </div>
     </section>
