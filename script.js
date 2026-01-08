@@ -1,17 +1,26 @@
-// Load portfolio content on page load
+// =================================================================
+// MODERN PORTFOLIO - SCROLL-DRIVEN ANIMATIONS
+// =================================================================
+
+// Initialize everything on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadPortfolioContent();
-    initializeAnimations();
-    initializeMatrix();
+    initializeScrollAnimations();
+    initializeParallax();
+    initializeScrollProgress();
+    initializeHorizontalScroll();
+    initializeMobileMenu();
 });
 
 // Load content from localStorage or defaults
 function loadPortfolioContent() {
     const config = getConfig();
 
-    // Hero Section
-    document.getElementById('heroName').textContent = config.personal.name;
-    document.getElementById('heroName').setAttribute('data-text', config.personal.name);
+    // Hero Section - Updated for word animation
+    const heroName = document.getElementById('heroName');
+    const words = config.personal.name.split(' ');
+    heroName.innerHTML = words.map(word => `<span class="word">${word}</span>`).join(' ');
+
     document.getElementById('heroTitle').textContent = config.personal.title;
     document.getElementById('heroDescription').textContent = config.personal.description;
     document.getElementById('nav-name').textContent = config.personal.name;
@@ -31,33 +40,30 @@ function loadPortfolioContent() {
     aboutStats.innerHTML = '';
     config.about.stats.forEach(stat => {
         const statDiv = document.createElement('div');
-        statDiv.className = 'stat';
+        statDiv.className = 'stat-box';
         statDiv.innerHTML = `
-            <i class="${stat.icon}"></i>
-            <h3>${stat.number}</h3>
-            <p>${stat.label}</p>
+            <span class="stat-value" data-target="${stat.number}">${stat.number}</span>
+            <span class="stat-label">${stat.label}</span>
         `;
         aboutStats.appendChild(statDiv);
     });
 
-    // Experience Section
+    // Experience Section - Horizontal cards
     const timeline = document.getElementById('experienceTimeline');
     timeline.innerHTML = '';
     config.experience.forEach(exp => {
-        const timelineItem = document.createElement('div');
-        timelineItem.className = 'timeline-item';
+        const expCard = document.createElement('div');
+        expCard.className = 'experience-card';
 
         const responsibilities = exp.responsibilities.map(r => `<li>${r}</li>`).join('');
 
-        timelineItem.innerHTML = `
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-                <h3>${exp.title}</h3>
-                <h4>${exp.company} | ${exp.period}</h4>
-                <ul>${responsibilities}</ul>
-            </div>
+        expCard.innerHTML = `
+            <span class="exp-period">${exp.period}</span>
+            <h3 class="exp-title">${exp.title}</h3>
+            <p class="exp-company">${exp.company}</p>
+            <ul class="exp-responsibilities">${responsibilities}</ul>
         `;
-        timeline.appendChild(timelineItem);
+        timeline.appendChild(expCard);
     });
 
     // Skills Section
@@ -67,27 +73,23 @@ function loadPortfolioContent() {
         const skillCategory = document.createElement('div');
         skillCategory.className = 'skill-category';
 
-        const skillsList = category.skills.map(s => `<li><i class="fas fa-check"></i> ${s}</li>`).join('');
+        const skillsList = category.skills.map(s => `<li>${s}</li>`).join('');
 
         skillCategory.innerHTML = `
-            <div class="category-icon">
-                <i class="${category.icon}"></i>
-            </div>
-            <h3>${category.title}</h3>
-            <ul class="skill-list">${skillsList}</ul>
+            <h3><i class="${category.icon}"></i> ${category.title}</h3>
+            <ul>${skillsList}</ul>
         `;
         skillsGrid.appendChild(skillCategory);
     });
 
-    // Certifications
+    // Certifications with scroll duplication for infinite scroll
     const certGrid = document.getElementById('certGrid');
     certGrid.innerHTML = '';
-    config.skills.certifications.forEach(cert => {
-        const certBadge = document.createElement('div');
-        certBadge.className = 'cert-badge';
-        certBadge.textContent = cert;
-        certGrid.appendChild(certBadge);
-    });
+    const certsHTML = config.skills.certifications.map(cert =>
+        `<div class="cert-badge">${cert}</div>`
+    ).join('');
+    // Duplicate certs for seamless infinite scroll
+    certGrid.innerHTML = certsHTML + certsHTML;
 
     // Projects Section
     const projectsGrid = document.getElementById('projectsGrid');
@@ -96,16 +98,25 @@ function loadPortfolioContent() {
         const projectCard = document.createElement('div');
         projectCard.className = 'project-card';
 
-        const tags = project.tags.map(t => `<span class="tag">${t}</span>`).join('');
+        const tags = project.tags.map(t => `<span class="project-tag">${t}</span>`).join('');
+        const links = `
+            <div class="project-links">
+                ${project.link ? `<a href="${project.link}" class="project-link" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                ${project.github ? `<a href="${project.github}" class="project-link" target="_blank"><i class="fab fa-github"></i></a>` : ''}
+            </div>
+        `;
 
         projectCard.innerHTML = `
-            <div class="project-icon">
-                <i class="${project.icon}"></i>
+            <div class="project-content">
+                <div class="project-header">
+                    <div>
+                        <h3 class="project-title">${project.title}</h3>
+                    </div>
+                    ${links}
+                </div>
+                <p class="project-description">${project.description}</p>
+                <div class="project-tags">${tags}</div>
             </div>
-            <h3>${project.title}</h3>
-            <p>${project.description}</p>
-            <div class="project-tags">${tags}</div>
-            <a href="${project.link}" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
         `;
         projectsGrid.appendChild(projectCard);
     });
@@ -117,19 +128,23 @@ function loadPortfolioContent() {
     contactMethods.innerHTML = '';
     const contacts = [
         { icon: 'fas fa-envelope', label: 'Email', value: config.personal.email, link: `mailto:${config.personal.email}` },
-        { icon: 'fab fa-linkedin', label: 'LinkedIn', value: config.personal.linkedin.replace('https://', ''), link: config.personal.linkedin },
-        { icon: 'fab fa-github', label: 'GitHub', value: config.personal.github.replace('https://', ''), link: config.personal.github },
-        { icon: 'fab fa-twitter', label: 'Twitter/X', value: '@' + config.personal.twitter.split('/').pop(), link: config.personal.twitter }
+        { icon: 'fab fa-linkedin', label: 'LinkedIn', value: 'LinkedIn Profile', link: config.personal.linkedin },
+        { icon: 'fab fa-github', label: 'GitHub', value: 'GitHub Profile', link: config.personal.github },
+        { icon: 'fab fa-twitter', label: 'X / Twitter', value: 'Twitter Profile', link: config.personal.twitter }
     ];
 
     contacts.forEach(contact => {
-        const contactMethod = document.createElement('div');
+        const contactMethod = document.createElement('a');
+        contactMethod.href = contact.link;
         contactMethod.className = 'contact-method';
+        if (contact.label !== 'Email') {
+            contactMethod.target = '_blank';
+        }
         contactMethod.innerHTML = `
             <i class="${contact.icon}"></i>
-            <div>
-                <h4>${contact.label}</h4>
-                <a href="${contact.link}" ${contact.label !== 'Email' ? 'target="_blank"' : ''}>${contact.value}</a>
+            <div class="method-info">
+                <div class="method-label">${contact.label}</div>
+                <div class="method-value">${contact.value}</div>
             </div>
         `;
         contactMethods.appendChild(contactMethod);
@@ -140,30 +155,220 @@ function loadPortfolioContent() {
 
     const footerSocials = document.getElementById('footerSocials');
     footerSocials.innerHTML = `
-        <a href="${config.personal.linkedin}" target="_blank"><i class="fab fa-linkedin"></i></a>
-        <a href="${config.personal.github}" target="_blank"><i class="fab fa-github"></i></a>
-        <a href="${config.personal.twitter}" target="_blank"><i class="fab fa-twitter"></i></a>
+        <a href="${config.personal.linkedin}" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
+        <a href="${config.personal.github}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+        <a href="${config.personal.twitter}" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>
     `;
 }
 
-// Mobile menu toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
+// =================================================================
+// SCROLL-DRIVEN ANIMATIONS
+// =================================================================
 
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
-});
-
-// Close menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        hamburger.classList.remove('active');
+function initializeScrollAnimations() {
+    // Intersection Observer for reveal animations
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     });
-});
 
-// Smooth scrolling
+    // Observe elements after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        // About section title lines
+        document.querySelectorAll('.title-line').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // About content
+        document.querySelectorAll('.lead, .about-text p, .stat-box').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Skills
+        document.querySelectorAll('.skill-category').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Projects
+        document.querySelectorAll('.project-card').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Contact
+        document.querySelectorAll('.contact-info, .contact-form').forEach(el => {
+            revealObserver.observe(el);
+        });
+    }, 100);
+
+    // Stats counter animation
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.dataset.animated) {
+                entry.target.dataset.animated = 'true';
+                animateCounter(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    setTimeout(() => {
+        document.querySelectorAll('.stat-value').forEach(el => {
+            statsObserver.observe(el);
+        });
+    }, 100);
+}
+
+function animateCounter(element) {
+    const target = element.getAttribute('data-target');
+    const number = parseInt(target.replace(/\D/g, ''));
+    const suffix = target.replace(/[0-9]/g, '');
+
+    if (isNaN(number)) return;
+
+    let current = 0;
+    const increment = number / 60;
+    const duration = 1500;
+    const stepTime = duration / 60;
+
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= number) {
+            element.textContent = target;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current) + suffix;
+        }
+    }, stepTime);
+}
+
+// =================================================================
+// PARALLAX EFFECTS
+// =================================================================
+
+function initializeParallax() {
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                handleParallax();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+}
+
+function handleParallax() {
+    const scrolled = window.pageYOffset;
+
+    // Hero parallax layers
+    const layerBg = document.querySelector('.layer-bg');
+    const layerMid = document.querySelector('.layer-mid');
+    const layerFront = document.querySelector('.layer-front');
+
+    if (layerBg && scrolled < window.innerHeight) {
+        layerBg.style.transform = `translateY(${scrolled * 0.3}px)`;
+    }
+    if (layerMid && scrolled < window.innerHeight) {
+        layerMid.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+    if (layerFront && scrolled < window.innerHeight) {
+        layerFront.style.transform = `translateY(${scrolled * 0.2}px)`;
+    }
+
+    // Hide scroll indicator when scrolling
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        if (scrolled > 100) {
+            scrollIndicator.style.opacity = '0';
+        } else {
+            scrollIndicator.style.opacity = '1';
+        }
+    }
+}
+
+// =================================================================
+// SCROLL PROGRESS INDICATOR
+// =================================================================
+
+function initializeScrollProgress() {
+    const progressBar = document.querySelector('.nav-progress');
+
+    window.addEventListener('scroll', () => {
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (window.pageYOffset / windowHeight) * 100;
+
+        if (progressBar) {
+            progressBar.style.width = scrolled + '%';
+        }
+    });
+
+    // Update navbar styling on scroll
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
+
+// =================================================================
+// HORIZONTAL SCROLL SECTION
+// =================================================================
+
+function initializeHorizontalScroll() {
+    // Experience section is now naturally scrollable
+    // No JavaScript needed for basic horizontal scroll
+    // But we can add smooth scroll hint behavior
+
+    const scrollHint = document.querySelector('.scroll-hint');
+    const horizontalWrapper = document.querySelector('.horizontal-scroll-wrapper');
+
+    if (horizontalWrapper && scrollHint) {
+        horizontalWrapper.addEventListener('scroll', () => {
+            if (horizontalWrapper.scrollLeft > 50) {
+                scrollHint.style.opacity = '0';
+            } else {
+                scrollHint.style.opacity = '1';
+            }
+        });
+    }
+}
+
+// =================================================================
+// NAVIGATION
+// =================================================================
+
+// Mobile menu toggle
+function initializeMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+    }
+}
+
+// Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -177,16 +382,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
         }
     });
-});
-
-// Navbar background on scroll
-const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(10, 14, 39, 1)';
-    } else {
-        navbar.style.background = 'rgba(10, 14, 39, 0.95)';
-    }
 });
 
 // Active navigation highlighting
@@ -204,123 +399,17 @@ window.addEventListener('scroll', () => {
 
     navLinks.forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
+        const href = link.getAttribute('href');
+        if (href === `#${current}`) {
             link.classList.add('active');
         }
     });
 });
 
-// Initialize animations
-function initializeAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
+// =================================================================
+// CONTACT FORM HANDLING
+// =================================================================
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    // Observe elements for animation
-    setTimeout(() => {
-        const animateElements = document.querySelectorAll('.project-card, .skill-category, .timeline-item, .stat');
-        animateElements.forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-    }, 100);
-
-    // Stats counter animation
-    const stats = document.querySelectorAll('.stat h3');
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const target = entry.target;
-                const targetText = target.textContent;
-                const number = parseInt(targetText);
-
-                if (!isNaN(number) && !target.dataset.animated) {
-                    target.dataset.animated = 'true';
-                    let current = 0;
-                    const increment = number / 50;
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= number) {
-                            target.textContent = targetText;
-                            clearInterval(timer);
-                        } else {
-                            target.textContent = Math.floor(current) + targetText.replace(/[0-9]/g, '');
-                        }
-                    }, 30);
-                }
-                statsObserver.unobserve(target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    setTimeout(() => {
-        stats.forEach(stat => statsObserver.observe(stat));
-    }, 100);
-}
-
-// Matrix rain effect
-function initializeMatrix() {
-    const canvas = document.getElementById('matrixCanvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
-    function drawMatrix() {
-        ctx.fillStyle = 'rgba(10, 14, 39, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = '#00ff8820';
-        ctx.font = fontSize + 'px monospace';
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-            drops[i]++;
-        }
-    }
-
-    setInterval(drawMatrix, 50);
-
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-}
-
-// Parallax effect for hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const heroContent = document.querySelector('.hero-content');
-    if (heroContent && scrolled < 700) {
-        heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-        heroContent.style.opacity = 1 - (scrolled / 700);
-    }
-});
-
-// Contact form handling
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -333,12 +422,12 @@ if (contactForm) {
 
         // Show success message
         const btn = contactForm.querySelector('.btn');
-        const originalText = btn.textContent;
-        btn.textContent = 'Message Sent!';
-        btn.style.background = 'linear-gradient(135deg, #00ff88, #0066ff)';
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span>Message Sent!</span> <i class="fas fa-check"></i>';
+        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
 
         setTimeout(() => {
-            btn.textContent = originalText;
+            btn.innerHTML = originalHTML;
             btn.style.background = '';
             contactForm.reset();
         }, 3000);

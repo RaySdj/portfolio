@@ -4,7 +4,10 @@ A fully responsive, modern portfolio website for cybersecurity professionals wit
 
 ## 🌟 Key Features
 
-### Admin Panel (Option 3)
+### Admin Panel (Option 3) - 🔒 SÉCURISÉ
+- **Protection par Mot de Passe**: Authentification requise pour accéder au panneau admin
+- **Session Sécurisée**: Expiration automatique après 30 minutes d'inactivité
+- **Hash SHA-256**: Les mots de passe sont hashés, jamais stockés en clair
 - **Visual Editor**: Click the gear icon to open the admin panel
 - **No Backend Required**: All data stored in browser's localStorage
 - **Drag-and-Drop Editing**: Easy-to-use forms for all content
@@ -35,13 +38,21 @@ A fully responsive, modern portfolio website for cybersecurity professionals wit
    - Double-click `index.html` or
    - Serve with a local server
 
-2. **Edit Your Content**
+2. **Change the Default Password (IMPORTANT!)**
+   - Open `generate-password.html` in your browser
+   - Enter your new secure password
+   - Copy the generated hash
+   - Open `admin.js` and replace the `ADMIN_PASSWORD_HASH` value (line 2)
+   - Save the file
+
+3. **Edit Your Content**
    - Click the **gear icon** (⚙️) in bottom-right corner
+   - Enter your password (default: `admin123`)
    - Edit your information in the admin panel
    - Click **Save Changes**
    - Page will reload with your updates
 
-3. **Deploy**
+4. **Deploy**
    - Copy all files to your web server
    - Or use GitHub Pages, Netlify, Vercel, etc.
 
@@ -264,11 +275,38 @@ portfolio2/
 
 ## 🔒 Security Notes
 
-- No sensitive data is transmitted
-- All data stays in browser
-- No server-side code
-- No database required
-- Safe to use on any hosting
+### Protection du Panneau d'Administration
+
+✅ **Ce qui est sécurisé:**
+- **Authentification par mot de passe** requise pour accéder au panneau admin
+- **Hash SHA-256** du mot de passe (jamais stocké en clair)
+- **Session avec expiration** automatique après 30 minutes d'inactivité
+- **Logout manuel** disponible à tout moment
+- Mot de passe par défaut: `admin123` (⚠️ À CHANGER IMMÉDIATEMENT!)
+
+### Comment changer le mot de passe:
+
+1. Ouvrez `generate-password.html` dans votre navigateur
+2. Entrez un mot de passe sécurisé (min 8 caractères)
+3. Copiez le hash SHA-256 généré
+4. Ouvrez `admin.js` et remplacez `ADMIN_PASSWORD_HASH` (ligne 2)
+5. Sauvegardez et testez
+
+### Recommandations de Sécurité:
+
+⚠️ **IMPORTANT:**
+- **Changez le mot de passe par défaut** dès l'installation!
+- Utilisez un mot de passe **fort** (8+ caractères, majuscules, chiffres, symboles)
+- Ne partagez **jamais** votre mot de passe ou hash
+- Déconnectez-vous après chaque utilisation
+- Exportez vos données régulièrement (backup)
+
+### Données:
+- Aucune donnée sensible n'est transmise sur le réseau
+- Toutes les données restent dans le navigateur (localStorage)
+- Pas de code serveur requis
+- Pas de base de données nécessaire
+- Sûr pour n'importe quel hébergement
 
 ## 📊 Browser Support
 

@@ -171,19 +171,16 @@
 
     <!-- Main Portfolio Content -->
     <nav class="navbar">
-        <div class="nav-content">
+        <div class="container">
             <div class="nav-brand">
-                <a href="#home" id="nav-name">Portfolio</a>
-            </div>
-            <div class="nav-indicator">
-                <span class="nav-progress"></span>
+                <a href="#home"><i class="fas fa-shield-alt"></i> <span id="nav-name">Portfolio</span></a>
             </div>
             <ul class="nav-menu">
-                <li><a href="#about" class="nav-link" data-section="about">About</a></li>
-                <li><a href="#experience" class="nav-link" data-section="experience">Experience</a></li>
-                <li><a href="#skills" class="nav-link" data-section="skills">Skills</a></li>
-                <li><a href="#projects" class="nav-link" data-section="projects">Projects</a></li>
-                <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <div class="hamburger">
                 <span></span>
@@ -193,133 +190,84 @@
         </div>
     </nav>
 
-    <!-- Hero Section with Parallax Layers -->
     <section id="home" class="hero">
-        <div class="parallax-layer layer-bg"></div>
-        <div class="parallax-layer layer-mid"></div>
-        <div class="parallax-layer layer-front">
-            <div class="hero-content">
-                <div class="hero-text-reveal">
-                    <h1 class="hero-name" id="heroName">
-                        <span class="word">Your</span>
-                        <span class="word">Name</span>
-                    </h1>
-                    <div class="hero-title-wrap">
-                        <p class="hero-subtitle" id="heroTitle">Cybersecurity & Intelligence Professional</p>
-                    </div>
-                    <p class="hero-description" id="heroDescription">Protecting digital assets and analyzing threats.</p>
-                </div>
-                <div class="hero-cta">
-                    <a href="#projects" class="btn btn-primary">
-                        <span>Explore Work</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
+        <div class="hero-content">
+            <div class="glitch-wrapper">
+                <h1 class="glitch" id="heroName" data-text="Your Name">Your Name</h1>
+            </div>
+            <p class="hero-subtitle" id="heroTitle">Cybersecurity & Intelligence Professional</p>
+            <p class="hero-description" id="heroDescription">Protecting digital assets and analyzing threats.</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn btn-primary">View Projects</a>
+                <a href="#contact" class="btn btn-secondary">Get in Touch</a>
             </div>
         </div>
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <div class="scroll-line"></div>
+        <div class="hero-background">
+            <canvas id="matrixCanvas"></canvas>
         </div>
     </section>
 
-    <!-- About Section with Split Scroll -->
     <section id="about" class="about">
-        <div class="split-container">
-            <div class="split-side split-left" data-scroll-speed="0.5">
-                <div class="sticky-content">
-                    <h2 class="section-title">
-                        <span class="title-line">About</span>
-                        <span class="title-line">Me</span>
-                    </h2>
-                </div>
-            </div>
-            <div class="split-side split-right">
-                <div class="about-content">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
                     <p class="lead" id="aboutLead">Cybersecurity professional...</p>
-                    <div id="aboutParagraphs" class="about-text"></div>
+                    <div id="aboutParagraphs"></div>
                     <div class="about-stats" id="aboutStats"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Experience Section with Horizontal Scroll -->
     <section id="experience" class="experience">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span class="title-outline">Experience</span>
-            </h2>
-        </div>
-        <div class="horizontal-scroll-wrapper">
-            <div class="horizontal-scroll-content" id="experienceTimeline"></div>
-        </div>
-        <div class="scroll-hint">
-            <i class="fas fa-arrow-right"></i>
-            <span>Scroll horizontally</span>
+        <div class="container">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="timeline" id="experienceTimeline"></div>
         </div>
     </section>
 
-    <!-- Skills Section with Perspective Grid -->
     <section id="skills" class="skills">
         <div class="container">
-            <h2 class="section-title">
-                <span class="title-main">Technical</span>
-                <span class="title-accent">Arsenal</span>
-            </h2>
-            <div class="skills-perspective">
-                <div class="skills-grid" id="skillsGrid"></div>
-            </div>
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid" id="skillsGrid"></div>
             <div class="certifications">
-                <h3 class="cert-title">Certifications</h3>
-                <div class="cert-scroll">
-                    <div class="cert-grid" id="certGrid"></div>
-                </div>
+                <h3>Certifications</h3>
+                <div class="cert-grid" id="certGrid"></div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section with Layered Cards -->
     <section id="projects" class="projects">
         <div class="container">
-            <h2 class="section-title">
-                <span class="title-split">Featured</span>
-                <span class="title-split">Projects</span>
-            </h2>
-            <div class="projects-stack" id="projectsGrid"></div>
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid" id="projectsGrid"></div>
         </div>
     </section>
 
-    <!-- Contact Section with Reveal Animation -->
     <section id="contact" class="contact">
-        <div class="contact-wrapper">
-            <div class="contact-bg-text">CONTACT</div>
-            <div class="container">
-                <h2 class="section-title">Get In Touch</h2>
-                <div class="contact-layout">
-                    <div class="contact-info">
-                        <p class="contact-description" id="contactDescription">Feel free to reach out.</p>
-                        <div class="contact-methods" id="contactMethods"></div>
-                    </div>
-                    <form class="contact-form" id="contactForm">
-                        <div class="form-group">
-                            <input type="text" name="name" placeholder="Your Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" name="email" placeholder="Your Email" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="subject" placeholder="Subject" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <span>Send Message</span>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p class="contact-description" id="contactDescription">Feel free to reach out.</p>
+                    <div class="contact-methods" id="contactMethods"></div>
                 </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
             </div>
         </div>
     </section>

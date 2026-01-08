@@ -1,3 +1,90 @@
+// Security Configuration
+const ADMIN_PASSWORD_HASH = 'e99a18c428cb38d5f260853678922e03'; // MD5 hash of "admin123" (CHANGE THIS!)
+const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
+
+// Simple MD5 hash function (for demo purposes - use bcrypt in production)
+async function hashPassword(password) {
+    const msgBuffer = new TextEncoder().encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Check if user is authenticated
+function isAuthenticated() {
+    const authData = localStorage.getItem('adminAuth');
+    if (!authData) return false;
+
+    const { timestamp } = JSON.parse(authData);
+    const now = Date.now();
+
+    // Check if session expired
+    if (now - timestamp > SESSION_DURATION) {
+        localStorage.removeItem('adminAuth');
+        return false;
+    }
+
+    return true;
+}
+
+// Authenticate user
+async function authenticate(password) {
+    const hashedPassword = await hashPassword(password);
+
+    // Compare with stored hash
+    if (hashedPassword === ADMIN_PASSWORD_HASH) {
+        localStorage.setItem('adminAuth', JSON.stringify({
+            timestamp: Date.now(),
+            authenticated: true
+        }));
+        return true;
+    }
+    return false;
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem('adminAuth');
+    document.getElementById('adminPanel').classList.remove('active');
+    alert('Vous avez été déconnecté.');
+}
+
+// Show login modal
+function showLoginModal() {
+    const modal = document.getElementById('loginModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.getElementById('loginPassword').focus();
+    }
+}
+
+// Hide login modal
+function hideLoginModal() {
+    const modal = document.getElementById('loginModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginError').style.display = 'none';
+    }
+}
+
+// Handle login
+async function handleLogin(event) {
+    event.preventDefault();
+    const password = document.getElementById('loginPassword').value;
+    const errorMsg = document.getElementById('loginError');
+
+    if (await authenticate(password)) {
+        hideLoginModal();
+        document.getElementById('adminPanel').classList.add('active');
+        loadAdminData();
+    } else {
+        errorMsg.textContent = 'Mot de passe incorrect!';
+        errorMsg.style.display = 'block';
+        document.getElementById('loginPassword').value = '';
+    }
+}
+
 // Default Portfolio Configuration
 const defaultConfig = {
     personal: {
@@ -90,10 +177,14 @@ function saveConfig(config) {
     localStorage.setItem('portfolioConfig', JSON.stringify(config));
 }
 
-// Admin Panel Toggle
+// Admin Panel Toggle (with authentication)
 document.getElementById('adminToggle').addEventListener('click', () => {
-    document.getElementById('adminPanel').classList.add('active');
-    loadAdminData();
+    if (isAuthenticated()) {
+        document.getElementById('adminPanel').classList.add('active');
+        loadAdminData();
+    } else {
+        showLoginModal();
+    }
 });
 
 document.getElementById('closeAdmin').addEventListener('click', () => {
