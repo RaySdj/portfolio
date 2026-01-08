@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Portfolio | Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Admin Toggle Button -->
+    <button id="adminToggle" class="admin-toggle" title="Toggle Admin Panel">
+        <i class="fas fa-cog"></i>
+    </button>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-header">
+            <h2><i class="fas fa-tools"></i> Admin Panel</h2>
+            <button id="closeAdmin" class="close-admin">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="admin-content">
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-tab="personal">Personal</button>
+                <button class="tab-btn" data-tab="about">About</button>
+                <button class="tab-btn" data-tab="experience">Experience</button>
+                <button class="tab-btn" data-tab="skills">Skills</button>
+                <button class="tab-btn" data-tab="projects">Projects</button>
+                <button class="tab-btn" data-tab="contact">Contact</button>
+            </div>
+
+            <div class="admin-sections">
+                <!-- Personal Info Tab -->
+                <div class="admin-section active" id="tab-personal">
+                    <h3>Personal Information</h3>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="edit-name" placeholder="Your Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="edit-title" placeholder="Your Professional Title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="edit-description" rows="3" placeholder="Brief introduction"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="edit-email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn URL</label>
+                        <input type="url" id="edit-linkedin" placeholder="https://linkedin.com/in/...">
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub URL</label>
+                        <input type="url" id="edit-github" placeholder="https://github.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter/X URL</label>
+                        <input type="url" id="edit-twitter" placeholder="https://twitter.com/...">
+                    </div>
+                </div>
+
+                <!-- About Tab -->
+                <div class="admin-section" id="tab-about">
+                    <h3>About Section</h3>
+                    <div class="form-group">
+                        <label>Lead Text</label>
+                        <input type="text" id="edit-about-lead" placeholder="Main headline">
+                    </div>
+                    <div class="form-group">
+                        <label>Paragraphs (one per line)</label>
+                        <textarea id="edit-about-paragraphs" rows="5" placeholder="Each line will be a separate paragraph"></textarea>
+                    </div>
+                    <div id="stats-editor">
+                        <h4>Statistics</h4>
+                        <div id="stats-list"></div>
+                        <button class="btn-add" onclick="addStat()"><i class="fas fa-plus"></i> Add Stat</button>
+                    </div>
+                </div>
+
+                <!-- Experience Tab -->
+                <div class="admin-section" id="tab-experience">
+                    <h3>Professional Experience</h3>
+                    <div id="experience-list"></div>
+                    <button class="btn-add" onclick="addExperience()"><i class="fas fa-plus"></i> Add Experience</button>
+                </div>
+
+                <!-- Skills Tab -->
+                <div class="admin-section" id="tab-skills">
+                    <h3>Skills & Certifications</h3>
+                    <div id="skills-categories-list"></div>
+                    <button class="btn-add" onclick="addSkillCategory()"><i class="fas fa-plus"></i> Add Category</button>
+
+                    <h4 style="margin-top: 2rem;">Certifications</h4>
+                    <div class="form-group">
+                        <label>Certifications (comma-separated)</label>
+                        <input type="text" id="edit-certifications" placeholder="OSCP, CISSP, CEH, ...">
+                    </div>
+                </div>
+
+                <!-- Projects Tab -->
+                <div class="admin-section" id="tab-projects">
+                    <h3>Projects</h3>
+                    <div id="projects-list"></div>
+                    <button class="btn-add" onclick="addProject()"><i class="fas fa-plus"></i> Add Project</button>
+                </div>
+
+                <!-- Contact Tab -->
+                <div class="admin-section" id="tab-contact">
+                    <h3>Contact Information</h3>
+                    <div class="form-group">
+                        <label>Contact Description</label>
+                        <textarea id="edit-contact-description" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn-save" onclick="saveAllChanges()">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <button class="btn-export" onclick="exportConfig()">
+                    <i class="fas fa-download"></i> Export Config
+                </button>
+                <button class="btn-import" onclick="document.getElementById('importFile').click()">
+                    <i class="fas fa-upload"></i> Import Config
+                </button>
+                <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importConfig(event)">
+                <button class="btn-reset" onclick="resetToDefaults()">
+                    <i class="fas fa-undo"></i> Reset to Defaults
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Portfolio Content -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="#home"><i class="fas fa-shield-alt"></i> <span id="nav-name">Portfolio</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="glitch-wrapper">
+                <h1 class="glitch" id="heroName" data-text="Your Name">Your Name</h1>
+            </div>
+            <p class="hero-subtitle" id="heroTitle">Cybersecurity & Intelligence Professional</p>
+            <p class="hero-description" id="heroDescription">Protecting digital assets and analyzing threats.</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn btn-primary">View Projects</a>
+                <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+            </div>
+        </div>
+        <div class="hero-background">
+            <canvas id="matrixCanvas"></canvas>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="lead" id="aboutLead">Cybersecurity professional...</p>
+                    <div id="aboutParagraphs"></div>
+                    <div class="about-stats" id="aboutStats"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="timeline" id="experienceTimeline"></div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid" id="skillsGrid"></div>
+            <div class="certifications">
+                <h3>Certifications</h3>
+                <div class="cert-grid" id="certGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid" id="projectsGrid"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p class="contact-description" id="contactDescription">Feel free to reach out.</p>
+                    <div class="contact-methods" id="contactMethods"></div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p id="footerCopyright">&copy; 2026 Your Name. All rights reserved.</p>
+                <div class="social-links" id="footerSocials"></div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="admin.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
